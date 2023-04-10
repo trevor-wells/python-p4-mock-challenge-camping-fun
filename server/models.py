@@ -19,6 +19,8 @@ db = SQLAlchemy(metadata=metadata)
 class Activity(db.Model, SerializerMixin):
     __tablename__ = 'activities'
 
+    serialize_rules = ('-campers.activities', '-signups.activity')
+
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String)
     difficulty = db.Column(db.Integer)
@@ -29,6 +31,8 @@ class Activity(db.Model, SerializerMixin):
 
 class Signup(db.Model, SerializerMixin):
     __tablename__ = 'signups'
+
+    serialize_rules = ('-activity.signups', '-camper.signups')
 
     id = db.Column(db.Integer, primary_key=True)
     time=  db.Column(db.Integer)
@@ -44,6 +48,8 @@ class Signup(db.Model, SerializerMixin):
 
 class Camper(db.Model, SerializerMixin):
     __tablename__ = 'campers'
+
+    serialize_rules = ('-activities.campers', '-signups.camper')
 
     id = db.Column(db.Integer, primary_key=True)
 
