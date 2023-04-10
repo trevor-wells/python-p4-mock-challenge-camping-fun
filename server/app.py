@@ -33,7 +33,7 @@ def campers():
             db.session.commit()
             return camper.to_dict()
         except ValueError:
-            return {'error': '400: Validation error'}
+            return {'error': '400: Validation error'}, 400
 
 @app.route('/campers/<int:id>', methods=['GET'])
 def camper_by_id(id):
