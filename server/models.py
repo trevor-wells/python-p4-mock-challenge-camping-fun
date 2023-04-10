@@ -60,6 +60,12 @@ class Camper(db.Model, SerializerMixin):
     activities = association_proxy('signups', 'activity',
         creator=lambda act: Signup(activity=act))
     
+    @validates('name')
+    def validate_name(self, key, name):
+        if name:
+            return name
+        raise ValueError('Camper must have name.')
+
     @validates('age')
     def validate_age(self, key, age):
         if 8 <= age <= 18:
