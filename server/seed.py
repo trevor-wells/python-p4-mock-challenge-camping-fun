@@ -1,4 +1,4 @@
-from random import choice as rc
+from random import randint, choice as rc
 
 from faker import Faker
 
@@ -8,7 +8,38 @@ from models import db, Activity, Signup, Camper
 fake = Faker()
 
 def create_activities():
-    pass
+    activities = []
+    for _ in range(25):
+        a = Activity(
+            name=fake.sentence(),
+            difficulty=randint(1, 5)
+        )
+        activities.append(a)
+    
+    return activities
+
+def create_campers():
+    campers = []
+    for _ in range(120):
+        c = Camper(
+            name=fake.name(),
+            age=rc(range(8, 19))
+        )
+        campers.append(c)
+
+    return campers
+
+def create_signups(activities, campers):
+    signups = []
+    for _ in range(720):
+        s = Signup(
+            time=rc(range(24)),
+            camper_id=rc([camper.id for camper in campers]),
+            activity_id =rc([activity.id for activity in activities])
+        )
+        signups.append(s)
+    
+    return signups
 
 if __name__ == '__main__':
 
@@ -20,5 +51,17 @@ if __name__ == '__main__':
 
         print("Seeding activities...")
         activities = create_activities()
+        db.session.add_all(activities)
+        db.session.commit()
+
+        print("Seeding campers...")
+        campers = create_campers()
+        db.session.add_all(campers)
+        db.session.commit()
+
+        print("Seeding signups...")
+        signups = create_signups(activities, campers)
+        db.session.add_all(signups)
+        db.session.commit()
 
         print("Done seeding!")
